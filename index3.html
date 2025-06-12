@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Heart Belongs to You</title>
+    <style>
+        :root {
+            --primary: #ff6b8b;
+            --secondary: #ffb8c6;
+            --accent: #ff4757;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Dancing Script', cursive, sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffecef 100%);
+            color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 1.5s ease-out;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+        
+        .love-letter {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .love-letter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+        }
+        
+        .letter-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .letter-content p {
+            margin-bottom: 15px;
+        }
+        
+        .memories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .memory-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .memory-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .memory-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .memory-caption {
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .memory-date {
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .interactive-section {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .love-meter {
+            width: 100%;
+            height: 20px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .love-meter-fill {
+            height: 100%;
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .btn {
+            background: white;
+            color: var(--accent);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px;
+            font-family: inherit;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .polaroid {
+            background: white;
+            padding: 15px 15px 40px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transform: rotate(-3deg);
+            margin: 30px auto;
+            max-width: 300px;
+            position: relative;
+        }
+        
+        .polaroid img {
+            width: 100%;
+            height: auto;
+            border: 1px solid #eee;
+        }
+        
+        .polaroid::after {
+            content: 'My Favorite Person';
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-style: italic;
+        }
+        
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            transform: rotate(45deg);
+            opacity: 0;
+        }
+        
+        .heart:before, .heart:after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            position: absolute;
+        }
+        
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+        
+        .heart:after {
+            top: 0;
+            left: -10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--primary);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes floatUp {
+            0% {
+                transform: rotate(45deg) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(45deg) translateY(-100vh);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .memories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="music-control" id="musicControl">🎵</div>
+    
+    <div class="floating-hearts" id="heartsContainer"></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1>For the Love of My Life</h1>
+            <p class="subtitle">Every moment with you is a blessing I cherish</p>
+        </header>
+        
+        <section class="love-letter">
+            <div class="letter-content">
+                My Dearest,
+                
+                From the moment our paths crossed, my life gained colors I never knew existed. Your smile brightens my darkest days, and your laughter is the melody that plays in my heart.
+                
+                I remember our first date like it was yesterday - the nervous excitement, the way your eyes sparkled when you talked about your passions, and how I knew right then that you were someone extraordinary.
+                
+                Every day with you is an adventure. Whether we're exploring new places or simply curled up on the couch, I'm exactly where I want to be - by your side.
+                
+                You've seen me at my best and my worst, and yet you choose to love me through it all. That kind of love is rare and precious, and I promise to cherish it every single day.
+                
+                This is just a small token of my love, but know that my heart belongs to you completely.
+                
+                Forever yours,
+                Abishek Gharti magar
+            </div>
+        </section>
+        
+        <section class="memories">
+            <div class="memory-card">
+                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Our first date" class="memory-image">
+                <div class="memory-caption">
+                    <div class="memory-date">June 12, 2022</div>
+                    <div>Our first date at the coffee shop</div>
+                </div>
+            </div>
+            
+            <div class="memory-card">
+                <img src="https://images.unsplash.com/photo-1499678329028-101435549a4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Beach vacation" class="memory-image">
+                <div class="memory-caption">
+                    <div class="memory-date">August 5, 2022</div>
+                    <div>That magical sunset at the beach</div>
+                </div>
+            </div>
+            
+            <div class="memory-card">
+                <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Christmas" class="memory-image">
+                <div class="memory-caption">
+                    <div class="memory-date">December 25, 2022</div>
+                    <div>Our first Christmas together</div>
+                </div>
+            </div>
+        </section>
+        
+        <div class="polaroid">
+            <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Us together">
+        </div>
+        
+        <section class="interactive-section">
+            <h2 style="margin-bottom: 20px;">How Much Do I Love You?</h2>
+            <p>Click the button to see my love grow!</p>
+            
+            <div class="love-meter">
+                <div class="love-meter-fill" id="loveMeter" style="width: 0%"></div>
+            </div>
+            
+            <button class="btn" id="loveBtn">Click for More Love</button>
+            
+            <div id="loveMessage" style="margin-top: 20px; font-size: 1.2rem;"></div>
+        </section>
+    </div>
+    
+    <footer>
+        Made with infinite love for you • Rimisha Adhikari • [Current Year]
+    </footer>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Music toggle
+        const musicControl = document.getElementById('musicControl');
+        const bgMusic = document.getElementById('bgMusic');
+        let musicPlaying = false;
+        
+        musicControl.addEventListener('click', function() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicControl.textContent = '🎵';
+            } else {
+                bgMusic.play();
+                musicControl.textContent = '🔊';
+            }
+            musicPlaying = !musicPlaying;
+        });
+        
+        // Love meter interaction
+        const loveBtn = document.getElementById('loveBtn');
+        const loveMeter = document.getElementById('loveMeter');
+        const loveMessage = document.getElementById('loveMessage');
+        let loveLevel = 0;
+        const messages = [
+            "I like you",
+            "I really like you",
+            "I think I'm falling for you",
+            "I definitely have feelings for you",
+            "I'm crazy about you",
+            "I adore you",
+            "I'm head over heels for you",
+            "I love you more than words can say",
+            "My love for you is infinite ❤️"
+        ];
+        
+        loveBtn.addEventListener('click', function() {
+            if (loveLevel < 100) {
+                loveLevel += 10 + Math.random() * 5;
+                if (loveLevel > 100) loveLevel = 100;
+                
+                loveMeter.style.width = loveLevel + '%';
+                
+                const messageIndex = Math.min(
+                    Math.floor(loveLevel / (100 / messages.length)), 
+                    messages.length - 1
+                );
+                
+                loveMessage.textContent = messages[messageIndex];
+                
+                // Create hearts when clicked
+                createHearts(5);
+                
+                // Change button text randomly
+                const btnTexts = [
+                    "More Love!", 
+                    "Keep Going!", 
+                    "You're Amazing!", 
+                    "My Heart is Yours",
+                    "I Adore You"
+                ];
+                this.textContent = btnTexts[Math.floor(Math.random() * btnTexts.length)];
+            }
+        });
+        
+        // Floating hearts
+        function createHearts(count) {
+            const container = document.getElementById('heartsContainer');
+            
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    
+                    // Random position
+                    const startPosX = Math.random() * window.innerWidth;
+                    const startPosY = window.innerHeight + 50;
+                    
+                    // Random size
+                    const size = Math.random() * 15 + 10;
+                    
+                    // Random animation duration
+                    const duration = Math.random() * 3 + 2;
+                    
+                    // Random delay
+                    const delay = Math.random() * 0.5;
+                    
+                    // Set styles
+                    heart.style.left = `${startPosX}px`;
+                    heart.style.top = `${startPosY}px`;
+                    heart.style.width = `${size}px`;
+                    heart.style.height = `${size}px`;
+                    heart.style.opacity = '0.8';
+                    heart.style.animation = `floatUp ${duration}s linear ${delay}s forwards`;
+                    
+                    // Add to DOM
+                    container.appendChild(heart);
+                    
+                    // Remove heart after animation
+                    setTimeout(() => {
+                        heart.remove();
+                    }, (duration + delay) * 1000);
+                }, i * 300);
+            }
+        }
+        
+        // Initial floating hearts
+        setInterval(() => {
+            createHearts(2);
+        }, 3000);
+        
+        // Set current year in footer
+        document.querySelector('footer').innerHTML = document.querySelector('footer').innerHTML.replace(
+            '[Current Year]', new Date().getFullYear()
+        );
+        
+        // Typewriter effect for the letter (optional)
+        const letterContent = document.querySelector('.letter-content');
+        const originalText = letterContent.innerHTML;
+        letterContent.innerHTML = '';
+        
+        let i = 0;
+        const speed = 20; // typing speed in ms
+        
+        function typeWriter() {
+            if (i < originalText.length) {
+                letterContent.innerHTML += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+        
+        // Start typing after a short delay
+        setTimeout(typeWriter, 1000);
+    </script>
+</body>
+</html>
